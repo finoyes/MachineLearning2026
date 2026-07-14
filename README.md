@@ -10,7 +10,12 @@ The semester-long dataset is the Olist Brazilian E-Commerce Public Dataset.
 Sharad Laad
 LinkedIn: https://www.linkedin.com/in/sharadlaad/
 
-## Folder Structure
+## Submitted by
+
+Advait Kshirsagar  
+24B5004
+
+## Project Structure
 
 - `data/raw/`: Original dataset files
 - `data/processed/`: Cleaned datasets
@@ -18,7 +23,6 @@ LinkedIn: https://www.linkedin.com/in/sharadlaad/
 - `src/`: Python source code
 - `reports/`: Reports and observations
 - `figures/`: Generated plots
-- `models/`: Trained models
 
 ## Lab 1
 
