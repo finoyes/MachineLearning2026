@@ -430,6 +430,9 @@ cells.append(nbf.v4.new_code_cell("""categorical_missing_cols = [
 categorical_missing_cols = keep_existing_columns(clean_df, categorical_missing_cols)
 
 for col in categorical_missing_cols:
+    if clean_df[col].dtype.name == 'category':
+        if "Unknown" not in clean_df[col].cat.categories:
+            clean_df[col] = clean_df[col].cat.add_categories("Unknown")
     clean_df[col] = clean_df[col].fillna("Unknown")"""))
 
 # Cell 46
