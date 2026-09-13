@@ -1,0 +1,40 @@
+============================================================
+LAB 05: ORDINARY LEAST SQUARES (OLS) & GRADIENT DESCENT
+============================================================
+Dataset X (Height): [0.5 2.3 2.9]
+Dataset y (Weight): [1.4 1.9 3.2]
+Sample size n = 3, Degrees of freedom df = 1
+
+==================== OLS RESULTS ====================
+Equation       : y = 0.6410x + 0.9487
+Slope (m)      : 0.641026
+Intercept (c)  : 0.948718
+R-squared      : 0.7425
+t-statistic    : 1.6981
+p-value        : 0.3388
+
+============== GRADIENT DESCENT RESULTS =============
+Equation       : y = 0.6410x + 0.9487
+Slope (m)      : 0.641026
+Intercept (c)  : 0.948718
+R-squared      : 0.7425
+t-statistic    : 1.6981
+p-value        : 0.3388
+Final Loss     : 0.148205
+
+================ SIDE-BY-SIDE COMPARISON ================
+Metric / Parameter     | Analytical (OLS) | Iterative (GD)   | Difference  
+------------------------------------------------------------------------
+Slope (m)              | 0.641026         | 0.641026         | 0.000000    
+Intercept (c)          | 0.948718         | 0.948718         | 0.000000    
+R-squared              | 0.742501         | 0.742501         | 0.000000    
+t-statistic            | 1.698089         | 1.698089         | 0.000000    
+p-value                | 0.338819         | 0.338819         | 0.000000    
+
+Saved regression plot to figures/regression_comparison.png
+
+========== LEARNING RATE SENSITIVITY EXPERIMENTS ==========
+Alpha = 1.0   : Final m=-3922990867173908139945941641785934749638126939240836619105223686464964081011888285151872852892319744.0000, c=-1671414199880660591142299905711179644507071615391360560339904479387889781872076915718412514585739264.0000, Final Loss=1.009005e+198
+Alpha = 0.05  : Final m=    0.6766, c=    0.8652, Final Loss=1.498380e-01
+Alpha = 0.0001: Final m=    0.0906, c=    0.0412, Final Loss=4.287480e+00
+Saved learning rate sensitivity plot to figures/lr_sensitivity.png

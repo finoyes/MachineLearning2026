@@ -1,0 +1,174 @@
+======================================================================
+LAB 06: FEATURE ENGINEERING & FEATURE SELECTION
+======================================================================
+
+[Part A] Loaded ABT from: data\processed\olist_orders_abt.csv
+Shape: (99441, 29) (Rows: 99441, Columns: 29)
+
+[Part B] Target Variable: is_late_delivery
+Target distribution:
+is_late_delivery
+0    95898
+1     3543
+Proportions (%):
+is_late_delivery
+0    96.437083
+1     3.562917
+
+Dropping identifier & leakage columns: ['order_id', 'customer_id', 'customer_unique_id', 'delivery_days', 'delivery_delay_days', 'review_score', 'review_comment_count', 'has_review_comment', 'is_low_review']
+Safe feature pool columns count: 20
+
+[Part C] Computing Numerical Engineered Features...
+- average_item_price = total_price / total_items
+- freight_ratio = total_freight / total_price
+- items_per_seller = total_items / unique_sellers
+- seller_diversity = unique_sellers / total_items
+
+[Part D] Computing Date and Time Features...
+- is_weekend (order_day_of_week >= 5)
+- is_business_hour (order_hour between 9 and 18)
+- is_year_end (order_month in [11, 12])
+
+[Part E] Computing Cyclical Features (Sine/Cosine)...
+- month_sin, month_cos
+- hour_sin, hour_cos
+
+[Part F] Applying Log Transformations (log1p)...
+- log_total_price = log1p(total_price)
+- log_total_freight = log1p(total_freight)
+
+[Part G] Applying Binning to total_price...
+- price_band distribution:
+price_band
+very_low     60890
+low          37344
+medium        1157
+high            50
+very_high        0
+
+[Part H] Computing Interaction Features...
+- items_x_price = total_items * total_price
+
+[Part I] Missing Values in Engineered Features:
+average_item_price    0
+freight_ratio         0
+items_per_seller      0
+seller_diversity      0
+is_weekend            0
+is_business_hour      0
+is_year_end           0
+month_sin             0
+month_cos             0
+hour_sin              0
+hour_cos              0
+log_total_price       0
+log_total_freight     0
+price_band            0
+items_x_price         0
+
+[Part J] Summary Statistics of Numerical Engineered Features:
+                          mean         std       min           50%          max
+average_item_price   74.935875   64.088385  2.110000  5.802000e+01  2193.780000
+freight_ratio         0.634305    0.684969  0.008042  4.360310e-01    18.469194
+items_per_seller      1.000103    0.008071  1.000000  1.000000e+00     2.000000
+seller_diversity      0.999935    0.004747  0.500000  1.000000e+00     1.000000
+is_weekend            0.286119    0.451948  0.000000  0.000000e+00     1.000000
+is_business_hour      0.420410    0.493627  0.000000  0.000000e+00     1.000000
+is_year_end           0.155811    0.362678  0.000000  0.000000e+00     1.000000
+month_sin            -0.061340    0.719943 -1.000000 -2.449294e-16     1.000000
+month_cos             0.006193    0.691296 -1.000000 -1.836970e-16     1.000000
+hour_sin             -0.005018    0.706713 -1.000000  0.000000e+00     1.000000
+hour_cos             -0.004195    0.707477 -1.000000 -1.836970e-16     1.000000
+log_total_price       4.342107    0.885448  1.134623  4.343026e+00     7.693837
+log_total_freight     3.510709    0.692004  1.791759  3.589611e+00     5.412494
+items_x_price       226.177717  396.175658  2.110000  8.423000e+01  7987.600000
+
+==================================================
+[Part K] FEATURE SELECTION
+==================================================
+17.1 Variance Filtering (threshold=0.0):
+   Original Numeric Count: 28
+   Retained Numeric Count: 28
+   Dropped Zero-Variance Columns: []
+
+18. Correlation-Based Selection (Threshold = 0.90):
+Found 5 highly correlated pairs (|r| > 0.90):
+   - total_items            <---> unique_products        : r = 1.0000
+   - total_items            <---> unique_sellers         : r = 0.9999
+   - unique_products        <---> unique_sellers         : r = 0.9999
+   - items_per_seller       <---> seller_diversity       : r = -0.9840
+   - total_freight          <---> log_total_freight      : r = 0.9049
+Saved correlation heatmap to figures/correlation_heatmap.png
+
+19. Mutual Information (Target: is_late_delivery):
+Top 15 Features by Mutual Information:
+                feature  mutual_information
+estimated_delivery_days            0.061788
+       seller_diversity            0.005137
+          items_x_price            0.005058
+    payment_types_count            0.004657
+     average_item_price            0.003326
+               hour_sin            0.002609
+       items_per_seller            0.002393
+            total_items            0.002148
+            total_price            0.001764
+        log_total_price            0.001572
+            is_year_end            0.001506
+         unique_sellers            0.001496
+        unique_products            0.001392
+    total_payment_value            0.000806
+      order_day_of_week            0.000696
+Saved mutual information plot to figures/mutual_information.png
+
+20. Random Forest Feature Importance:
+Top 15 Features by Random Forest Importance:
+                feature  importance
+estimated_delivery_days    0.753209
+          freight_ratio    0.021995
+          total_freight    0.021204
+    total_payment_value    0.020294
+          items_x_price    0.018551
+     average_item_price    0.018259
+      log_total_freight    0.017803
+            total_price    0.016901
+        log_total_price    0.016731
+              order_day    0.014268
+             order_hour    0.010737
+               hour_sin    0.010212
+               hour_cos    0.010061
+            order_month    0.009146
+      order_day_of_week    0.008202
+Saved feature importance plot to figures/feature_importance.png
+
+[Part P] Final Feature Count: 26
+Final Dataset Shape: (99441, 27)
+[Part Q] Saved engineered dataset to: data\processed\olist_orders_feature_engineered.csv
+
+==================================================
+Part 25: MINI EXPERIMENT (Baseline vs. Engineered)
+==================================================
+Experiment                | Accuracy     | F1-Score    
+-------------------------------------------------------
+Model A (Baseline)        | 0.8453       | 0.3100      
+Model B (Engineered)      | 0.8530       | 0.3194      
+
+Baseline Classification Report:
+              precision    recall  f1-score   support
+
+           0       1.00      0.84      0.91     19180
+           1       0.18      0.97      0.31       709
+
+    accuracy                           0.85     19889
+   macro avg       0.59      0.91      0.61     19889
+weighted avg       0.97      0.85      0.89     19889
+
+Engineered Classification Report:
+              precision    recall  f1-score   support
+
+           0       1.00      0.85      0.92     19180
+           1       0.19      0.97      0.32       709
+
+    accuracy                           0.85     19889
+   macro avg       0.59      0.91      0.62     19889
+weighted avg       0.97      0.85      0.90     19889
+
